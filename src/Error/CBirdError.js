@@ -4,7 +4,7 @@ var AbstractError = require("./AbstractError");
 
 function CBirdError(info, message) {
     AbstractError.call(this, "CBirdError", info, message);
-    AbstractError.captureStackTrace(this, CBirdError);
+    Error.captureStackTrace(this, CBirdError);
 }
 
 CBirdError.prototype = Object.create(AbstractError.prototype);
