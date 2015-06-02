@@ -3,18 +3,23 @@
 //all the data function now belong to DB_Bucket
 
 var Couchbase = require("couchbase");
-var Error = require("../Error");
 var DB_Bucket = require("./DB_Bucket");
 var Promise = require("bluebird");
-var config = require("../Consts/config");
 var _ = require("lodash");
+var Error = require("../Error/CBirdError");
 
-function DB_Face(params) {
+function DB_Face() {
+    this.initiated = false;
+    return this;
+}
+
+DB_Face.prototype.init = function (params) {
     var opts = {
         server_ip: "127.0.0.1",
         n1ql: "127.0.0.1:8093"
     };
     _.assign(opts, params);
+    this.initiated = true;
     this._server_ip = opts.server_ip;
     this._n1ql = opts.n1ql;
     this._cluster = new Couchbase.Cluster(this._server_ip);
@@ -23,6 +28,7 @@ function DB_Face(params) {
     //just to incapsulate it here
     this.ViewQuery = Couchbase.ViewQuery;
     this.N1qlQuery = Couchbase.N1qlQuery;
+    return this;
 }
 
 
@@ -47,12 +53,5 @@ DB_Face.prototype._disconnect = function (bucket_name) {
     delete this._buckets[bucket_name];
 }
 
-//instantiating once and for all
-//this should be taken from config
-//other modules should not perform their own connect;
-var db = new DB_Face({
-    server_ip: config.db.server_ip,
-    n1ql: config.db.n1ql
-});
 
-module.exports = db;
+module.exports = DB_Face;

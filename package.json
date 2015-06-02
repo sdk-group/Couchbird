@@ -1,0 +1,28 @@
+{
+  "name": "Couchbird",
+  "version": "0.0.1",
+  "description": "Couchbase promisifying proxy.",
+  "main": "src/Couchbird.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YuuKohaku/Couchbird.git"
+  },
+  "keywords": [
+    "couchbase",
+    "bluebird"
+  ],
+  "author": "V.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YuuKohaku/Couchbird/issues"
+  },
+  "homepage": "https://github.com/YuuKohaku/Couchbird",
+  "dependencies": {
+    "bluebird": "^2.9.24",
+    "couchbase": "^2.0.8",
+    "lodash": "^3.7.0"
+  }
+}
