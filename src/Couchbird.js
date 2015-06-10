@@ -11,10 +11,8 @@ function get_database(config) {
     if (db.initiated) {
         return db;
     } else {
-        return db.init({
-            server_ip: config.server_ip,
-            n1ql: config.n1ql
-        });
+        var cfg = config || {}
+        return db.init(cfg);
     }
 }
 
