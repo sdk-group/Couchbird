@@ -75,7 +75,7 @@ DB_Bucket.prototype.getAndTouch = function (key, expiry, options) {
         .apply(this._bucket, arguments);
 };
 
-DB_Bucket.prototype.setExpiration = function (key, expiry, options) {
+DB_Bucket.prototype.touch = function (key, expiry, options) {
     return this._promisifyMethod(this._bucket.touch)
         .apply(this._bucket, arguments);
 };
@@ -160,14 +160,14 @@ DB_Bucket.prototype._query = function (query) {
 //query need to be Couchbase.ViewQuery
 DB_Bucket.prototype.view = function (query) {
     if (!query instanceof Couchbase.ViewQuery) {
-        throw new Error("INVALID_ARGUMENT", "Query need to be Couchbase ViewQuery");
+        throw new Error("INVALID_ARGUMENT", "Expected Couchbase ViewQuery");
     }
     return this._query(query);
 }
 
 DB_Bucket.prototype.N1QL = function (query) {
     if (!query instanceof Couchbase.N1qlQuery) {
-        throw new Error("INVALID_ARGUMENT", "Query need to be Couchbase N1qlQuery");
+        throw new Error("INVALID_ARGUMENT", "Expected Couchbase N1qlQuery");
     }
     return this._query(query);
 }
