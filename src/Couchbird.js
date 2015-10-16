@@ -17,3 +17,5 @@ function get_database(config) {
 }
 
 module.exports = get_database;
+module.exports.Cluster = require("./db/DB_Face");
+module.exports.Bucket = require("./db/DB_Bucket");
