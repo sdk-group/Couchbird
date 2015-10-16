@@ -8,10 +8,22 @@ var Promise = require("bluebird");
 var _ = require("lodash");
 var Error = require("../Error/CBirdError");
 
-function DB_Face() {
-    this.initiated = false;
-    return this;
-}
+//Singletone
+var DB_Face = function () {
+    var instance = null;
+
+    return function get_instance() {
+        if (instance) {
+            return instance;
+        }
+        if (this && this.constructor === get_instance) {
+            this.configured = false;
+            instance = this;
+        } else {
+            return new get_instance();
+        }
+    }
+}();
 
 DB_Face.prototype.init = function (params) {
     var opts = {
@@ -19,11 +31,11 @@ DB_Face.prototype.init = function (params) {
         n1ql: "127.0.0.1:8093"
     };
     _.assign(opts, params);
-    this.initiated = true;
     this._server_ip = opts.server_ip;
     this._n1ql = opts.n1ql;
     this._cluster = new Couchbase.Cluster(this._server_ip);
     this._buckets = {};
+    this.configured = true;
 
     //just to incapsulate it here
     this.ViewQuery = Couchbase.ViewQuery;
@@ -34,6 +46,9 @@ DB_Face.prototype.init = function (params) {
 
 //CONNECTION
 DB_Face.prototype.bucket = function (bucket_name) {
+    if (!this.configured)
+        throw new Error("DATABASE_ERROR", "Database is not initialized. Call init(config) before.");
+
     if (this._buckets[bucket_name]) {
         return this._buckets[bucket_name];
     }
