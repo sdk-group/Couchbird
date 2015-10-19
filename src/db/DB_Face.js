@@ -45,14 +45,15 @@ DB_Face.prototype.init = function (params) {
 
 
 //CONNECTION
-DB_Face.prototype.bucket = function (bucket_name) {
+DB_Face.prototype.bucket = function (bucket_name, bucket_class) {
+    var Bucket = bucket_class || DB_Bucket;
     if (!this.configured)
         throw new Error("DATABASE_ERROR", "Database is not initialized. Call init(config) before.");
 
     if (this._buckets[bucket_name]) {
         return this._buckets[bucket_name];
     }
-    this._buckets[bucket_name] = new DB_Bucket(this._cluster, bucket_name, {
+    this._buckets[bucket_name] = new Bucket(this._cluster, bucket_name, {
         n1ql: this._n1ql
     });
     return this._buckets[bucket_name];
