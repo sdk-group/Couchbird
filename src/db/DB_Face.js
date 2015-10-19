@@ -12,15 +12,15 @@ var Error = require("../Error/CBirdError");
 var DB_Face = function () {
     var instance = null;
 
-    return function get_instance() {
+    return function Couchbird() {
         if (instance) {
             return instance;
         }
-        if (this && this.constructor === get_instance) {
+        if (this && this.constructor === Couchbird) {
             this.configured = false;
             instance = this;
         } else {
-            return new get_instance();
+            return new Couchbird();
         }
     }
 }();
