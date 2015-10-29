@@ -44,6 +44,10 @@ DB_Bucket.prototype.enableN1ql = function () {
     this._bucket.enableN1ql(this._n1ql);
 }
 
+DB_Bucket.prototype.manager = function () {
+    return this._bucket.manager();
+}
+
 //DOCUMENTS
 DB_Bucket.prototype.insert = function (key, value, options) {
     return this._promisifyMethod(this._bucket.insert)
