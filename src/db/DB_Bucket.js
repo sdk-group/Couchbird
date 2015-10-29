@@ -4,6 +4,7 @@
 var Couchbase = require("couchbase");
 var Error = require("../Error/CBirdError");
 var Promise = require("bluebird");
+var DB_BucketManager = require("./DB_BucketManager");
 
 var DB_Bucket = function (cluster, bucket_name, params) {
     this._cluster = cluster;
@@ -45,7 +46,7 @@ DB_Bucket.prototype.enableN1ql = function () {
 }
 
 DB_Bucket.prototype.manager = function () {
-    return this._bucket.manager();
+    return new DB_BucketManager(this);
 }
 
 //DOCUMENTS
