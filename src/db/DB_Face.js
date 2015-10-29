@@ -37,9 +37,6 @@ DB_Face.prototype.init = function (params) {
     this._buckets = {};
     this.configured = true;
 
-    //just to incapsulate it here
-    this.ViewQuery = Couchbase.ViewQuery;
-    this.N1qlQuery = Couchbase.N1qlQuery;
     return this;
 }
 
