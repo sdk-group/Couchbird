@@ -157,7 +157,7 @@ DB_Bucket.prototype.counterRemove = function (cKey, dKey) {
 }
 
 //VIEWS AND N1QL
-DB_Bucket.prototype._query = function (query) {
+DB_Bucket.prototype._query = function (query, opts) {
     return this._promisifyMethod(this._bucket.query)
         .apply(this._bucket, arguments);
 }
@@ -170,11 +170,11 @@ DB_Bucket.prototype.view = function (query) {
     return this._query(query);
 }
 
-DB_Bucket.prototype.N1QL = function (query) {
+DB_Bucket.prototype.N1QL = function (query, opts) {
     if (!query instanceof Couchbase.N1qlQuery) {
         throw new Error("INVALID_ARGUMENT", "Expected Couchbase N1qlQuery");
     }
-    return this._query(query);
+    return this._query(query, opts);
 }
 
 //TIMEOUTS
