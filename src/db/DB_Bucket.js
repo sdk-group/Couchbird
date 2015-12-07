@@ -4,6 +4,7 @@
 var Couchbase = require("couchbase");
 var Error = require("../Error/CBirdError");
 var Promise = require("bluebird");
+var DB_BucketManager = require("./DB_BucketManager");
 
 var DB_Bucket = function (cluster, bucket_name, params) {
     this._cluster = cluster;
@@ -44,6 +45,10 @@ DB_Bucket.prototype.enableN1ql = function () {
     this._bucket.enableN1ql(this._n1ql);
 }
 
+DB_Bucket.prototype.manager = function () {
+    return new DB_BucketManager(this);
+}
+
 //DOCUMENTS
 DB_Bucket.prototype.insert = function (key, value, options) {
     return this._promisifyMethod(this._bucket.insert)
@@ -75,7 +80,7 @@ DB_Bucket.prototype.getAndTouch = function (key, expiry, options) {
         .apply(this._bucket, arguments);
 };
 
-DB_Bucket.prototype.setExpiration = function (key, expiry, options) {
+DB_Bucket.prototype.touch = function (key, expiry, options) {
     return this._promisifyMethod(this._bucket.touch)
         .apply(this._bucket, arguments);
 };
@@ -152,7 +157,7 @@ DB_Bucket.prototype.counterRemove = function (cKey, dKey) {
 }
 
 //VIEWS AND N1QL
-DB_Bucket.prototype._query = function (query) {
+DB_Bucket.prototype._query = function (query, opts) {
     return this._promisifyMethod(this._bucket.query)
         .apply(this._bucket, arguments);
 }
@@ -160,16 +165,16 @@ DB_Bucket.prototype._query = function (query) {
 //query need to be Couchbase.ViewQuery
 DB_Bucket.prototype.view = function (query) {
     if (!query instanceof Couchbase.ViewQuery) {
-        throw new Error("INVALID_ARGUMENT", "Query need to be Couchbase ViewQuery");
+        throw new Error("INVALID_ARGUMENT", "Expected Couchbase ViewQuery");
     }
     return this._query(query);
 }
 
-DB_Bucket.prototype.N1QL = function (query) {
+DB_Bucket.prototype.N1QL = function (query, opts) {
     if (!query instanceof Couchbase.N1qlQuery) {
-        throw new Error("INVALID_ARGUMENT", "Query need to be Couchbase N1qlQuery");
+        throw new Error("INVALID_ARGUMENT", "Expected Couchbase N1qlQuery");
     }
-    return this._query(query);
+    return this._query(query, opts);
 }
 
 //TIMEOUTS
