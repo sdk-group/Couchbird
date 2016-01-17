@@ -10,12 +10,14 @@ var DB_Bucket = function(cluster, bucket_name, params) {
 	this._cluster = cluster;
 	this.bucket_name = bucket_name;
 	this._n1ql = [params.n1ql];
-	this._bucket = cluster.openBucket(this.bucket_name,
-		function(err, res) {
-			if(err) {
-				throw new Error("DATABASE_ERROR", err, bucket_name);
-			}
-		});
+	this._bucket = cluster.openBucket(this.bucket_name
+		// ,
+		// function(err, res) {
+		// 	if(err) {
+		// 		throw new Error("DATABASE_ERROR", err, bucket_name);
+		// 	}
+		// }
+	);
 }
 
 //INIT
