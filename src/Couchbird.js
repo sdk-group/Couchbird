@@ -9,7 +9,7 @@ var Couchbase = require("couchbase");
 var db = DB_Face();
 
 function get_database(config, reinit) {
-    if (db.configured && !reinit) {
+    if (db.configured && !reinit || !config) {
         return db;
     } else {
         var cfg = config || {}
