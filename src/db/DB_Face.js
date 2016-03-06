@@ -9,7 +9,7 @@ var _ = require("lodash");
 var Error = require("../Error/CBirdError");
 
 //Singletone
-var DB_Face = function() {
+var DB_Face = function () {
 	var instance = null;
 
 	return function Couchbird() {
@@ -25,7 +25,7 @@ var DB_Face = function() {
 	}
 }();
 
-DB_Face.prototype.init = function(params) {
+DB_Face.prototype.init = function (params) {
 	var opts = {
 		server_ip: "127.0.0.1",
 		n1ql: "127.0.0.1:8093"
@@ -42,7 +42,7 @@ DB_Face.prototype.init = function(params) {
 
 
 //CONNECTION
-DB_Face.prototype.bucket = function(bucket_name, bucket_class) {
+DB_Face.prototype.bucket = function (bucket_name, bucket_class) {
 	var Bucket = bucket_class || DB_Bucket;
 	if (!this.configured)
 		throw new Error("DATABASE_ERROR", "Database is not initialized. Call init(config) before.");
@@ -58,11 +58,11 @@ DB_Face.prototype.bucket = function(bucket_name, bucket_class) {
 //should not be used. In fact, calling disconnect on the bucket directly may result in segfault
 //bucket autoreconnects in configurable interval, so we don't need to manage connection
 //so it seems to be the right way just "to keep or not to keep" the bucket reference in _buckets pool
-DB_Face.prototype._disconnect = function(bucket_name) {
+DB_Face.prototype._disconnect = function (bucket_name) {
 	if (!this._buckets[bucket_name]) {
 		return;
 	}
-	delete this._buckets[bucket_name];
+	_.unset(this._buckets, bucket_name);
 }
 
 
