@@ -22,7 +22,7 @@
   "homepage": "https://github.com/YuuKohaku/Couchbird",
   "dependencies": {
     "bluebird": "^3.3.4",
-    "couchbase": "^2.1.4",
-    "lodash": "^4.8.2"
+    "couchbase": "^2.1.5",
+    "lodash": "^4.9.0"
   }
 }
