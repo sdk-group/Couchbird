@@ -23,6 +23,6 @@
   "dependencies": {
     "bluebird": "^3.3.5",
     "couchbase": "^2.1.5",
-    "lodash": "^4.10.0"
+    "lodash": "^4.11.1"
   }
 }
