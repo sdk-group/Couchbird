@@ -7,6 +7,7 @@ var DB_Bucket = require("./DB_Bucket");
 var Promise = require("bluebird");
 var _ = require("lodash");
 var Error = require("../Error/CBirdError");
+let child_process = require('child_process');
 
 //Singletone
 var DB_Face = function () {
@@ -35,6 +36,13 @@ DB_Face.prototype.init = function (params) {
 	this._n1ql = opts.n1ql;
 	this._cluster = new Couchbase.Cluster(this._server_ip);
 	this._buckets = {};
+	//@NOTE: dirty ungly hack;
+	this.worker = child_process.fork(__dirname + '/getMultiWorker.js');
+	this.worker.send({
+		type: 'config',
+		data: params
+	});
+
 	this.configured = true;
 
 	return this;
@@ -49,7 +57,8 @@ DB_Face.prototype.bucket = function (bucket_name, bucket_class) {
 
 	if (!this._buckets[bucket_name] || !(this._buckets[bucket_name] instanceof Bucket)) {
 		this._buckets[bucket_name] = new Bucket(this._cluster, bucket_name, {
-			n1ql: this._n1ql
+			n1ql: this._n1ql,
+			worker: this.worker
 		});
 	}
 	return this._buckets[bucket_name];

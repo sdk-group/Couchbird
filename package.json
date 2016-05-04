@@ -23,6 +23,7 @@
   "dependencies": {
     "bluebird": "^3.3.5",
     "couchbase": "^2.1.5",
-    "lodash": "^4.11.1"
+    "lodash": "^4.11.1",
+    "node-uuid": "^1.4.7"
   }
 }
