@@ -80,6 +80,10 @@ DB_Bucket.prototype.manager = function () {
 	return new DB_BucketManager(this);
 }
 
+DB_Bucket.prototype.reconnect = function () {
+	this._bucket = this._cluster.openBucket(this.bucket_name);
+}
+
 //DOCUMENTS
 DB_Bucket.prototype.insert = function (key, value, options) {
 	return this._promisifyMethod(this._bucket.insert)
