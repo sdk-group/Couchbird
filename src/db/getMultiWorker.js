@@ -45,6 +45,7 @@ function getMulti(bucket_name, keys, id) {
 	let chunk_size = _.ceil(len / process_count);
 	let chunks = _.chunk(keys, chunk_size);
 	let request = new Request(id, chunks.length);
+
 	request_pool.push(request);
 
 	chunks.forEach((chunk, index) => {
