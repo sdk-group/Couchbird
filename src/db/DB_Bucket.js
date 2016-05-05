@@ -124,6 +124,7 @@ DB_Bucket.prototype.getMulti = function (keys) {
 	this.worker.send({
 		type: 'getMulti',
 		data: keys,
+		bucket: this.bucket_name,
 		id: request.id
 	});
 

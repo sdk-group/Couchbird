@@ -40,7 +40,7 @@ function fanout(name, data) {
 	}));
 };
 
-function getMulti(keys, id) {
+function getMulti(bucket_name, keys, id) {
 	let len = keys.length;
 	let chunk_size = _.ceil(len / process_count);
 	let chunks = _.chunk(keys, chunk_size);
@@ -51,6 +51,7 @@ function getMulti(keys, id) {
 		slaves[index].send({
 			type: 'getMulti',
 			data: chunk,
+			bucket: bucket_name,
 			request_id: request.id
 		});
 	});
@@ -65,7 +66,7 @@ process.on('message', (m) => {
 		fanout('bucket', m.data);
 		break;
 	case 'getMulti':
-		getMulti(m.data, m.id);
+		getMulti(m.bucket, m.data, m.id);
 		break;
 	}
 });

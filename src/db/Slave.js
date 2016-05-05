@@ -2,11 +2,11 @@
 
 var Couchbase = require("couchbase");
 
-let _bucket = false;
+let _buckets = {};
 let cb = false;
 
-function getMulti(keys, id) {
-	_bucket.getMulti(keys, (err, res) => {
+function getMulti(bucket_name, keys, id) {
+	_buckets[bucket_name].getMulti(keys, (err, res) => {
 		if (err) throw new Error('can get damned keys');
 		process.send({
 			data: res,
@@ -20,7 +20,7 @@ function config(cfg) {
 }
 
 function bucket(name) {
-	_bucket = cb.openBucket(name);
+	_buckets[name] = cb.openBucket(name);
 }
 
 process.on('message', (m) => {
@@ -32,7 +32,7 @@ process.on('message', (m) => {
 		bucket(m.data);
 		break;
 	case 'getMulti':
-		getMulti(m.data, m.request_id);
+		getMulti(m.bucket, m.data, m.request_id);
 		break;
 	}
 });
