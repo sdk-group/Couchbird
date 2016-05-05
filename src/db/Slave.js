@@ -6,13 +6,11 @@ let _buckets = {};
 let cb = false;
 
 function getMulti(bucket_name, keys, id) {
-	_buckets[bucket_name].getMulti(keys, (err, res) => {
-		if (err) throw new Error('can get damned keys');
-		process.send({
-			data: res,
-			id: id
-		});
-	});
+	_buckets[bucket_name].getMulti(keys, (err, res) => process.send({
+		data: res,
+		err: err,
+		id: id
+	}));
 }
 
 function config(cfg) {
