@@ -122,7 +122,7 @@ DB_Bucket.prototype.touch = function (key, expiry, options) {
 
 //does not make sense at all since it is a set of single gets in couchnode
 DB_Bucket.prototype.getMulti = function (keys) {
-	if (_.isEmpty(keys)) return Promise.reslove({});
+	if (_.isEmpty(keys)) return Promise.resolve({});
 
 	let request = new SingleRequest();
 	request_pool.push(request);
