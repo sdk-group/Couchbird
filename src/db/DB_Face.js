@@ -44,14 +44,13 @@ DB_Face.prototype.init = function(params) {
   });
 
   process.on('SIGINT', () => {
-    this.worker.send({
-      type: 'kill'
-    });
+    this.sendKill();
   });
   process.on('SIGKILL', () => {
-    this.worker.send({
-      type: 'kill'
-    });
+    this.sendKill();
+  });
+  process.on('exit', () => {
+    this.sendKill();
   });
 
   this.configured = true;
@@ -59,7 +58,11 @@ DB_Face.prototype.init = function(params) {
   return this;
 }
 
-
+DB_Face.prototype.sendKill = function() {
+  this.worker.send({
+    type: 'kill'
+  });
+};
 //CONNECTION
 DB_Face.prototype.bucket = function(bucket_name, bucket_class) {
   var Bucket = bucket_class || DB_Bucket;

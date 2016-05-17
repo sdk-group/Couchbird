@@ -1,6 +1,6 @@
 'use strict'
 
-const process_count = 10;
+const process_count = 3;
 
 let child_process = require('child_process');
 let Promise = require('bluebird');
