@@ -43,14 +43,12 @@ DB_Face.prototype.init = function (params) {
 		data: params
 	});
 
+
 	process.on('SIGINT', () => {
 		this.sendKill();
-	});
-	process.on('SIGTERM', () => {
-		this.sendKill();
-	});
-	process.on('exit', () => {
-		this.sendKill();
+		setTimeout(function () {
+			process.exit(0);
+		}, 300);
 	});
 
 	this.configured = true;
