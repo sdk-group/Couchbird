@@ -1,5 +1,19 @@
 'use strict';
 //DB promisifying proto
+let uuid = require('node-uuid');
+let _ = require('lodash');
+
+let request_pool = [];
+
+class SingleRequest {
+	constructor() {
+		this.id = uuid.v1();
+
+		this.promise = new Promise((resolve, reject) => {
+			this.resolve = resolve;
+		});
+	}
+}
 
 var Couchbase = require("couchbase");
 var Error = require("../Error/CBirdError");
@@ -18,6 +32,21 @@ var DB_Bucket = function (cluster, bucket_name, params) {
 		// 	}
 		// }
 	);
+
+	this.worker = params.worker;
+	this.worker.send({
+		type: 'bucket',
+		data: bucket_name
+	});
+
+	this.worker.on('message', (m) => {
+		let id = m.id;
+		let request = _.find(request_pool, r => r.id == id)
+		if (!request) return;
+		request.resolve(m.data);
+		_.remove(request_pool, r => r.id == id)
+	})
+
 }
 
 //INIT
@@ -53,8 +82,9 @@ DB_Bucket.prototype.manager = function () {
 
 DB_Bucket.prototype.reconnect = function () {
 		this._bucket = this._cluster.openBucket(this.bucket_name);
-	}
+};
 	//DOCUMENTS
+
 DB_Bucket.prototype.insert = function (key, value, options) {
 	return this._promisifyMethod(this._bucket.insert)
 		.apply(this._bucket, arguments);
@@ -92,10 +122,19 @@ DB_Bucket.prototype.touch = function (key, expiry, options) {
 
 //does not make sense at all since it is a set of single gets in couchnode
 DB_Bucket.prototype.getMulti = function (keys) {
-	return this._promisifyMethod(this._bucket.getMulti, {
-			error: " documents were not found"
-		})
-		.call(this._bucket, keys);
+	if (_.isEmpty(keys)) return Promise.resolve({});
+
+	let request = new SingleRequest();
+	request_pool.push(request);
+
+	this.worker.send({
+		type: 'getMulti',
+		data: keys,
+		bucket: this.bucket_name,
+		id: request.id
+	});
+
+	return request.promise;
 };
 
 DB_Bucket.prototype.remove = function (key, options) {
