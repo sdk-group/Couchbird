@@ -24,14 +24,31 @@ var DB_Bucket = function (cluster, bucket_name, params) {
 	this._cluster = cluster;
 	this.bucket_name = bucket_name;
 	this._n1ql = [params.n1ql];
-	this._bucket = cluster.openBucket(this.bucket_name
-		// ,
-		// function(err, res) {
-		// 	if(err) {
-		// 		throw new Error("DATABASE_ERROR", err, bucket_name);
-		// 	}
-		// }
-	);
+	this._bucket = cluster.openBucket(this.bucket_name,
+		function (err, res) {
+			if (err) {
+				global.logger && logger.error(
+					err, {
+						module: 'Couchbird',
+						method: 'bucket'
+					});
+				return this.reconnect();
+			}
+			global.logger && logger.info(
+				"Connection established", {
+					module: 'Couchbird',
+					method: 'bucket'
+				});
+		});
+
+	this._bucket.on('error', (err) => {
+		console.log("CBIRD ERR:", err.message);
+		global.logger && logger.error(err, "Bucket %s error", this.bucket_name);
+		return this.reconnect();
+	});
+
+	this.setOperationTimeout(params.operation_timeout || 60000);
+	this.setConnectionTimeout(params.connection_timeout || 5000);
 
 	this.worker = params.worker;
 	this.worker.send({
@@ -81,9 +98,23 @@ DB_Bucket.prototype.manager = function () {
 }
 
 DB_Bucket.prototype.reconnect = function () {
-		this._bucket = this._cluster.openBucket(this.bucket_name);
+	this._bucket = this._cluster.openBucket(this.bucket_name,
+		function (err, res) {
+			if (err) {
+				global.logger && logger.error(
+					err, {
+						module: 'Couchbird',
+						method: 'reconnect'
+					});
+			}
+			global.logger && logger.info(
+				"Reconnect successful:", {
+					module: 'Couchbird',
+					method: 'reconnect'
+				});
+		});
 };
-	//DOCUMENTS
+//DOCUMENTS
 
 DB_Bucket.prototype.insert = function (key, value, options) {
 	return this._promisifyMethod(this._bucket.insert)
@@ -245,6 +276,6 @@ DB_Bucket.prototype.setViewTimeout = function (timeout) {
 }
 
 DB_Bucket.prototype.setConnectionTimeout = function (timeout) {
-	return this._setTimeout('connectionTimeout ', timeout);
+	return this._setTimeout('connectionTimeout', timeout);
 }
 module.exports = DB_Bucket;
