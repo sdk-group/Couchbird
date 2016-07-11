@@ -30,14 +30,16 @@ var DB_Bucket = function (cluster, bucket_name, params) {
 				global.logger && logger.error(
 					err, {
 						module: 'Couchbird',
-						method: 'bucket'
+						method: 'bucket',
+						bucket_name: bucket_name
 					});
 				return this.reconnect();
 			}
 			global.logger && logger.info(
 				"Connection established", {
 					module: 'Couchbird',
-					method: 'bucket'
+					method: 'bucket',
+					bucket_name: bucket_name
 				});
 		});
 
@@ -104,13 +106,15 @@ DB_Bucket.prototype.reconnect = function () {
 				global.logger && logger.error(
 					err, {
 						module: 'Couchbird',
-						method: 'reconnect'
+						method: 'reconnect',
+						bucket_name: this.bucket_name
 					});
 			}
 			global.logger && logger.info(
 				"Reconnect successful:", {
 					module: 'Couchbird',
-					method: 'reconnect'
+					method: 'reconnect',
+					bucket_name: this.bucket_name
 				});
 		});
 };
