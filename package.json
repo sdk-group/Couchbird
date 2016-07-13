@@ -8,7 +8,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/YuuKohaku/Couchbird.git#get-multi-workers"
+		"url": "https://github.com/sdk-group/Couchbird.git"
 	},
 	"keywords": [
     "couchbase",
@@ -17,9 +17,9 @@
 	"author": "V.",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/YuuKohaku/Couchbird/issues"
+		"url": "https://github.com/sdk-group/Couchbird/issues"
 	},
-	"homepage": "https://github.com/YuuKohaku/Couchbird",
+	"homepage": "https://github.com/sdk-group/Couchbird",
 	"dependencies": {
 		"bluebird": "^3.4.1",
 		"couchbase": "^2.2.1",
