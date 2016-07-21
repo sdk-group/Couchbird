@@ -49,8 +49,8 @@ var DB_Bucket = function (cluster, bucket_name, params) {
 		return this.reconnect();
 	});
 
-	this.setOperationTimeout(params.operation_timeout || 120000);
-	this.setConnectionTimeout(params.connection_timeout || 5000);
+	this.setOperationTimeout(params.operation_timeout || 240000);
+	// this.setConnectionTimeout(params.connection_timeout || 5000);
 
 	this.worker = params.worker;
 	this.worker.send({
