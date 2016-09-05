@@ -21,8 +21,8 @@
 	},
 	"homepage": "https://github.com/sdk-group/Couchbird",
 	"dependencies": {
-		"bluebird": "^3.4.1",
-		"couchbase": "^2.2.1",
-		"lodash": "^4.13.1"
+		"bluebird": "^3.4.3",
+		"couchbase": "^2.2.2",
+		"lodash": "^4.15.0"
 	}
 }
