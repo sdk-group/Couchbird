@@ -25,7 +25,7 @@ var DB_Bucket = function (cluster, bucket_name, params) {
 	this.bucket_name = bucket_name;
 	this._n1ql = [params.n1ql];
 	this._bucket = cluster.openBucket(this.bucket_name,
-		function (err, res) {
+		(err, res) => {
 			if (err) {
 				global.logger && logger.error(
 					err, {
